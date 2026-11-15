@@ -17,7 +17,7 @@ def channel_shuffle(x, groups):
 class GTS_Feature_Fusion(nn.Module):
     """Gated temporal-spatial feature fusion module."""
 
-    def __init__(self, channels):
+    def __init__(self, channels, dropoutP=0.5):
         super(GTS_Feature_Fusion, self).__init__()
         self.global_pool = nn.AdaptiveAvgPool2d(1)
         self.gate = nn.Sequential(
@@ -25,7 +25,7 @@ class GTS_Feature_Fusion(nn.Module):
             nn.ELU(),
             nn.Linear(channels // 2, channels * 2),
             nn.Sigmoid(),
-            nn.Dropout(0.5),
+            nn.Dropout(dropoutP),
         )
         self.interact = nn.Sequential(
             nn.Conv2d(channels * 2, channels, kernel_size=1, bias=False),
